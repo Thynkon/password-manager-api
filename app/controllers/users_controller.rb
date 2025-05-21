@@ -10,7 +10,7 @@ class UsersController < ApplicationController
         }, status: :created
     end
 
-    def me
+    def protected_route
         render json: current_user, status: :ok
     end
 

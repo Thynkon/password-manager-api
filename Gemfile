@@ -55,3 +55,6 @@ gem "rack-cors", "~> 3.0"
 gem "argon2id"
 
 gem "active_model_serializers"
+
+gem "rswag"
+gem "rspec-rails"

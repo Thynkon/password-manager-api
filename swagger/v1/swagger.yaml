@@ -1,0 +1,96 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+components:
+  securitySchemes:
+    bearer_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+paths:
+  "/users":
+    post:
+      summary: Creates a user and returns a JWT token
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '201':
+          description: user created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+              - username
+              - password
+  "/protected_route":
+    get:
+      summary: Returns the authenticated user
+      tags:
+      - Users
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        description: 'JWT token in the format: Bearer <token>'
+        schema:
+          type: string
+      responses:
+        '200':
+          description: user info returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  username:
+                    type: string
+                required:
+                - id
+                - username
+        '401':
+          description: unauthorized
+  "/login":
+    post:
+      summary: Logs in a user and returns a JWT token
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '200':
+          description: successful login
+        '401':
+          description: unauthorized (invalid credentials)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+              - username
+              - password
+servers:
+- url: https://{defaultHost}
+  variables:
+    defaultHost:
+      default: www.example.com
