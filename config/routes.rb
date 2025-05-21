@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :secrets
   mount Rswag::Ui::Engine => "/api-docs"
   mount Rswag::Api::Engine => "/api-docs"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -12,4 +13,6 @@ Rails.application.routes.draw do
   post "/users", to: "users#create"
   post "/login", to: "auth#login"
   get "/protected_route", to: "users#protected_route"
+
+  resources :secrets
 end

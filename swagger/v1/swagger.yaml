@@ -89,6 +89,85 @@ paths:
               required:
               - username
               - password
+  "/secrets":
+    get:
+      summary: List secrets of the authenticated user
+      tags:
+      - Secrets
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: secrets listed
+    post:
+      summary: Create a secret
+      tags:
+      - Secrets
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: secret created
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                value:
+                  type: string
+                user_id:
+                  type: integer
+              required:
+              - value
+              - user_id
+  "/secrets/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: Secret ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Get a specific secret
+      tags:
+      - Secrets
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: secret found
+        '403':
+          description: not your secret
+    patch:
+      summary: Update a secret
+      tags:
+      - Secrets
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: secret updated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                value:
+                  type: string
+    delete:
+      summary: Delete a secret
+      tags:
+      - Secrets
+      security:
+      - bearer_auth: []
+      responses:
+        '204':
+          description: secret deleted
 servers:
 - url: https://{defaultHost}
   variables:

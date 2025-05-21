@@ -3,6 +3,7 @@ require "argon2id"
 # Schema: User(name: string, password_digest:string)
 class User < ApplicationRecord
   attr_reader :password
+  has_many :secrets
 
   validates :username, uniqueness: true
   validates :password_digest, presence: true
