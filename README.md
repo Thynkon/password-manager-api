@@ -1,24 +1,70 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+> [!NOTE]  
+> In a real-world case, the master key should be stored in a password manager, not as plain text in the README!
 
-Things you may want to cover:
+## Using docker
 
-* Ruby version
+In order to be able to use this api, all you need to do is to type the following command:
 
-* System dependencies
+```sh
+RAILS_MASTER_KEY=6af8def2059cb625408b19bdcd19fdbc docker compose up --build
+```
 
-* Configuration
+And then, you can access it throught: `http://localhost:3000`
 
-* Database creation
+## Natively
 
-* Database initialization
+### Requirements
 
-* How to run the test suite
+First, make sure you have ruby installed.
 
-* Services (job queues, cache servers, search engines, etc.)
+The easiest-way is throught **asdf**
+First install it by [reading the official docs](https://asdf-vm.com/guide/getting-started.html).
 
-* Deployment instructions
+Then, add the ruby plugin:
 
-* ...
+```sh
+asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
+```
+
+Finally, install ruby.
+
+```sh
+ asdf install ruby 3.4.3
+ asdf set ruby 3.4.3
+```
+
+### Setup
+
+First, create the file `config/master.key` and add to it:
+```txt
+6af8def2059cb625408b19bdcd19fdbc
+```
+
+This is the way ruby on rails handles credentials. It encrypts a yml file with the master key. Those credentials can then be accessed from the ruby on rails app. In there, we stored the hmac used to generate the `JWT` tokens.
+
+Install the project's dependencies:
+
+```sh
+bundle install
+```
+
+
+Then, run the db migrations:
+
+```sh
+./bin/rails db:migrate
+```
+
+Finally, run the server:
+
+```sh
+./bin/rails server
+```
+
+## Docs
+
+A swagger-like documentation (for the api routes) can be consulted at:
+
+`http://localhost:3000/api-docs`
