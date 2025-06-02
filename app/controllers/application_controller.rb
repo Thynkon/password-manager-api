@@ -5,7 +5,7 @@ class ApplicationController < ActionController::API
     payload[:iat] = now
     payload[:exp] = now + (24 * 60 * 60)
 
-    JWT.decode(token, Rails.application.credentials.jwt_hmac!, true, { algorithm: "HS256" })
+    JWT.encode(payload, Rails.application.credentials.jwt_hmac!, "HS256")
   end
 
   def decoded_token
