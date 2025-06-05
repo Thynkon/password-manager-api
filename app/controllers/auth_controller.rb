@@ -7,7 +7,8 @@ class AuthController < ApplicationController
         if @user.authenticate(login_params[:password])
             @token = encode_token(user_id: @user.id)
             render json: {
-                token: @token
+                token: @token,
+                sym_key_salt: @user.ensure_sym_key_salt
             }, status: :accepted
         else
             render json: { message: "Incorrect password" }, status: :unauthorized

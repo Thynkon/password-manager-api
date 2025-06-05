@@ -48,7 +48,9 @@ class SecretsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def secret_params
-      params.expect(secret: [ :value, :user_id ])
+      sp = params.require(:secret).permit(:value, :nonce, :user_id)
+      sp[:nonce] = Base64.decode64(sp[:nonce]) if sp[:nonce].present?
+      sp
     end
 
   def check_belongs_to_user

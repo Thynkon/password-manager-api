@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_21_183117) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_04_145953) do
   create_table "secrets", force: :cascade do |t|
     t.text "value"
     t.integer "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.binary "nonce"
     t.index ["user_id"], name: "index_secrets_on_user_id"
   end
 
@@ -25,6 +26,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_183117) do
     t.string "bio"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.binary "sym_key_salt"
   end
 
   add_foreign_key "secrets", "users"
