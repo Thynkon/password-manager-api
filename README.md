@@ -1,4 +1,6 @@
-# README
+# 🔐 Secure Password Manager – Backend
+
+> Depends on the frontend part : [https://github.com/Thynkon/password-manager-api](https://github.com/NATSIIRT/HEIGVD_WEB_PROJECT_FRONTEND)
 
 > [!NOTE]  
 > In a real-world case, the master key should be stored in a password manager, not as plain text in the README!
