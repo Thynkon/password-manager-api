@@ -1,70 +1,125 @@
-# README
+# Secrets API
 
-> [!NOTE]  
-> In a real-world case, the master key should be stored in a password manager, not as plain text in the README!
+> A minimal Ruby on Rails API that provides JWT-based authentication and allows users to store and manage encrypted secrets.
 
-## Using docker
+---
 
-In order to be able to use this api, all you need to do is to type the following command:
+## 🚀 Overview
+
+This API enables:
+
+* User registration and login using JWT tokens
+* Secure secret storage per user
+* Swagger-powered API documentation
+
+---
+
+## 🔐 Security Disclaimer
+
+> \[!WARNING]
+> The `RAILS_MASTER_KEY` provided below is **for development purposes only**.
+> In a real-world case, **never store secrets in plain text** or in version control. Use a password manager or secret manager (e.g., HashiCorp Vault, 1Password, Doppler).
+
+---
+
+## 🐳 Using Docker
+
+To run the app with Docker:
 
 ```sh
 RAILS_MASTER_KEY=6af8def2059cb625408b19bdcd19fdbc docker compose up --build
 ```
 
-And then, you can access it throught: `http://localhost:3000`
+Then visit: [http://localhost:3000](http://localhost:3000)
 
-## Natively
+---
 
-### Requirements
+## 💻 Running Natively
 
-First, make sure you have ruby installed.
+### ✅ Requirements
 
-The easiest-way is throught **asdf**
-First install it by [reading the official docs](https://asdf-vm.com/guide/getting-started.html).
-
-Then, add the ruby plugin:
+You need Ruby installed. The recommended way is via [`asdf`](https://asdf-vm.com/guide/getting-started.html):
 
 ```sh
 asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
+asdf install ruby 3.4.3
+asdf global ruby 3.4.3
 ```
 
-Finally, install ruby.
+---
+
+### 🔧 Setup Instructions
+
+1. Create the master key file:
 
 ```sh
- asdf install ruby 3.4.3
- asdf set ruby 3.4.3
+echo "6af8def2059cb625408b19bdcd19fdbc" > config/master.key
 ```
 
-### Setup
+This allows Rails to decrypt `config/credentials.yml.enc` (which contains the JWT HMAC secret).
 
-First, create the file `config/master.key` and add to it:
-```txt
-6af8def2059cb625408b19bdcd19fdbc
-```
-
-This is the way ruby on rails handles credentials. It encrypts a yml file with the master key. Those credentials can then be accessed from the ruby on rails app. In there, we stored the hmac used to generate the `JWT` tokens.
-
-Install the project's dependencies:
+2. Install dependencies:
 
 ```sh
 bundle install
 ```
 
-
-Then, run the db migrations:
+3. Create and migrate the database:
 
 ```sh
-./bin/rails db:migrate
+./bin/rails db:create db:migrate
 ```
 
-Finally, run the server:
+4. (Optional) Seed example data:
+
+```sh
+./bin/rails db:seed
+```
+
+5. Run the server:
 
 ```sh
 ./bin/rails server
 ```
 
-## Docs
+Now visit: [http://localhost:3000](http://localhost:3000)
 
-A swagger-like documentation (for the api routes) can be consulted at:
+---
 
-`http://localhost:3000/api-docs`
+## 🔑 Authentication
+
+This API uses **JWT (JSON Web Token)** for authentication.
+
+### How it works:
+
+1. **Register a user**
+   `POST /users` with `{ username, password }`
+
+2. **Login**
+   `POST /login` with `{ username, password }`
+   → returns `{ token, sym_key_salt }`
+
+3. **Access protected routes**
+   Add this header:
+
+```
+Authorization: Bearer <your-token>
+```
+
+---
+
+## 📘 API Documentation
+
+The Swagger-style interactive docs are available at:
+
+👉 [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
+
+### Update the Swagger file:
+
+If you change your API specs, regenerate the OpenAPI JSON with:
+
+```sh
+bundle exec rake rswag:specs:swaggerize
+```
+
+This will generate `swagger/v1/swagger.json` from your RSpec integration tests.

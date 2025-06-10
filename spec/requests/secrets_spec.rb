@@ -1,4 +1,3 @@
-# spec/integration/secrets_spec.rb
 require 'swagger_helper'
 
 RSpec.describe 'Secrets API', type: :request do
@@ -9,6 +8,17 @@ RSpec.describe 'Secrets API', type: :request do
       produces 'application/json'
 
       response '200', 'secrets listed' do
+        schema type: :array,
+               items: {
+                 type: :object,
+                 properties: {
+                   id: { type: :integer },
+                   value: { type: :string },
+                   user_id: { type: :integer }
+                 },
+                 required: [ 'id', 'value', 'user_id' ]
+               }
+
         let(:Authorization) do
           user = User.create!(username: 'testuser', password: 'securepass')
           Secret.create!(value: 'my secret', user: user)
@@ -35,6 +45,14 @@ RSpec.describe 'Secrets API', type: :request do
       }
 
       response '201', 'secret created' do
+        schema type: :object,
+               properties: {
+                 id: { type: :integer },
+                 value: { type: :string },
+                 user_id: { type: :integer }
+               },
+               required: [ 'id', 'value', 'user_id' ]
+
         let(:Authorization) do
           user = User.create!(username: 'testuser', password: 'securepass')
           token = JWT.encode({ user_id: user.id }, Rails.application.credentials.jwt_hmac!, 'HS256')
@@ -57,6 +75,14 @@ RSpec.describe 'Secrets API', type: :request do
       produces 'application/json'
 
       response '200', 'secret found' do
+        schema type: :object,
+               properties: {
+                 id: { type: :integer },
+                 value: { type: :string },
+                 user_id: { type: :integer }
+               },
+               required: [ 'id', 'value', 'user_id' ]
+
         let(:Authorization) do
           user = User.create!(username: 'testuser', password: 'securepass')
           secret = Secret.create!(value: 'secret', user: user)
@@ -70,6 +96,12 @@ RSpec.describe 'Secrets API', type: :request do
       end
 
       response '403', 'not your secret' do
+        schema type: :object,
+               properties: {
+                 message: { type: :string }
+               },
+               required: [ 'message' ]
+
         let(:Authorization) do
           user = User.create!(username: 'hacker', password: 'hack')
           token = JWT.encode({ user_id: user.id }, Rails.application.credentials.jwt_hmac!, 'HS256')
@@ -89,6 +121,8 @@ RSpec.describe 'Secrets API', type: :request do
       tags 'Secrets'
       security [ bearer_auth: [] ]
       consumes 'application/json'
+      produces 'application/json'
+
       parameter name: :secret, in: :body, schema: {
         type: :object,
         properties: {
@@ -97,6 +131,14 @@ RSpec.describe 'Secrets API', type: :request do
       }
 
       response '200', 'secret updated' do
+        schema type: :object,
+               properties: {
+                 id: { type: :integer },
+                 value: { type: :string },
+                 user_id: { type: :integer }
+               },
+               required: [ 'id', 'value', 'user_id' ]
+
         let(:Authorization) do
           user = User.create!(username: 'testuser', password: 'securepass')
           Secret.create!(value: 'initial', user: user)

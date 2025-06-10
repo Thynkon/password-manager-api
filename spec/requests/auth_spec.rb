@@ -1,4 +1,3 @@
-
 require 'swagger_helper'
 
 RSpec.describe 'Authentication', type: :request do
@@ -17,7 +16,14 @@ RSpec.describe 'Authentication', type: :request do
         required: [ 'username', 'password' ]
       }
 
-      response '200', 'successful login' do
+      response '202', 'successful login' do
+        schema type: :object,
+               properties: {
+                 token: { type: :string },
+                 sym_key_salt: { type: :string }
+               },
+               required: [ 'token', 'sym_key_salt' ]
+
         let(:credentials) do
           User.create!(username: 'testuser', password: 'securepass')
           { username: 'testuser', password: 'securepass' }
@@ -34,7 +40,13 @@ RSpec.describe 'Authentication', type: :request do
         run_test!
       end
 
-      response '401', 'unauthorized (invalid credentials)' do
+      response '401', 'unauthorized (invalid credentials or unknown user)' do
+        schema type: :object,
+               properties: {
+                 message: { type: :string }
+               },
+               required: [ 'message' ]
+
         let(:credentials) { { username: 'testuser', password: 'wrongpass' } }
 
         after do |example|

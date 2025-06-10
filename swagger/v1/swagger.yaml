@@ -19,8 +19,31 @@ paths:
       responses:
         '201':
           description: user created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  sym_key_salt:
+                    type: string
+                required:
+                - token
+                - sym_key_salt
         '422':
           description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                required:
+                - errors
       requestBody:
         content:
           application/json:
@@ -65,6 +88,15 @@ paths:
                 - username
         '401':
           description: unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
   "/login":
     post:
       summary: Logs in a user and returns a JWT token
@@ -72,10 +104,31 @@ paths:
       - Authentication
       parameters: []
       responses:
-        '200':
+        '202':
           description: successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  sym_key_salt:
+                    type: string
+                required:
+                - token
+                - sym_key_salt
         '401':
-          description: unauthorized (invalid credentials)
+          description: unauthorized (invalid credentials or unknown user)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
       requestBody:
         content:
           application/json:
@@ -99,6 +152,23 @@ paths:
       responses:
         '200':
           description: secrets listed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    value:
+                      type: string
+                    user_id:
+                      type: integer
+                  required:
+                  - id
+                  - value
+                  - user_id
     post:
       summary: Create a secret
       tags:
@@ -109,6 +179,21 @@ paths:
       responses:
         '201':
           description: secret created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  value:
+                    type: string
+                  user_id:
+                    type: integer
+                required:
+                - id
+                - value
+                - user_id
       requestBody:
         content:
           application/json:
@@ -139,8 +224,32 @@ paths:
       responses:
         '200':
           description: secret found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  value:
+                    type: string
+                  user_id:
+                    type: integer
+                required:
+                - id
+                - value
+                - user_id
         '403':
           description: not your secret
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                - message
     patch:
       summary: Update a secret
       tags:
@@ -151,6 +260,21 @@ paths:
       responses:
         '200':
           description: secret updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  value:
+                    type: string
+                  user_id:
+                    type: integer
+                required:
+                - id
+                - value
+                - user_id
       requestBody:
         content:
           application/json:
